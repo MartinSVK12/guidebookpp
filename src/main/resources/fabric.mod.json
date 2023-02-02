@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "guidebookpp",
+  "version": "1.0.0",
+
+  "name": "Guidebook++",
+  "description": "Extends the guidebooks functionality!",
+  "authors": [
+    "MartinSVK12"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "MIT",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sunsetsatellite.guidebookpp.GuidebookPlusPlus"
+    ]
+  },
+  "mixins": [
+    "guidebookpp.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3"
+  },
+  "suggests": {
+  }
+}
