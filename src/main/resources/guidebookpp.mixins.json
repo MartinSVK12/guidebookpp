@@ -1,16 +1,17 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "sunsetsatellite.guidebookpp.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "mixins": [
-        "GuiContainerMixin",
-        "GuiGuidebookMixin",
-        "MinecraftMixin"
-    ],
-    "client": [
-    ],
-    "injectors": {
-        "defaultRequire": 1
+  "required": true,
+  "minVersion": "0.8",
+  "package": "sunsetsatellite.guidebookpp.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GameSettingsMixin",
+    "GuiContainerMixin",
+    "GuiGuidebookMixin",
+    "MinecraftMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
   }
 }

@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
+import sunsetsatellite.guidebookpp.IKeybinds;
 
 @Mixin(
         value = GuiContainer.class,
@@ -26,12 +27,13 @@ public abstract class GuiContainerMixin extends GuiScreen {
             at = @At("TAIL")
     )
     public void keyTyped(char c, int i, CallbackInfo ci){
+
         Slot slot = GuidebookPlusPlus.lastSlotHovered;
-        if(slot != null && c == 'r'){
+        if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey()){
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = false;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
-        } else if(slot != null && c == 'u'){
+        } else if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewUsage().isEventKey()){
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = true;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();

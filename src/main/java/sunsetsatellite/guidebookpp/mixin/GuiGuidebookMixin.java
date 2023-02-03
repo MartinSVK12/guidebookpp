@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
+import sunsetsatellite.guidebookpp.IKeybinds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,22 +45,56 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         focusRecipe();
     }
 
+    @Inject(
+            method = "drawGuiContainerForegroundLayer",
+            at = @At("TAIL")
+    )
+    protected void drawGuiContainerForegroundLayer(CallbackInfo ci) {
+        if(totalRecipes == 0 && !GuidebookPlusPlus.isUsage){
+            this.drawStringNoShadow(this.fontRenderer, "No recipes.", -58, -3, 4210752);
+        } else if(totalRecipes == 0 && GuidebookPlusPlus.isUsage){
+            this.drawStringNoShadow(this.fontRenderer, "No usages.", -58, -3, 4210752);
+        }
+    }
+
+    @Inject(
+            method = "keyTyped",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    public void keyTyped(char c, int i, CallbackInfo ci){
+        if(c == 27){
+            this.mc.thePlayer.closeScreen();
+            ci.cancel();
+        }
+        Slot slot = GuidebookPlusPlus.lastSlotHovered;
+        if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey()){
+            GuidebookPlusPlus.focus = slot.getStack();
+            GuidebookPlusPlus.isUsage = false;
+            GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
+        } else if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewUsage().isEventKey()){
+            GuidebookPlusPlus.focus = slot.getStack();
+            GuidebookPlusPlus.isUsage = true;
+            GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
+        } else if (slot == null && this.mc.gameSettings.keyGuidebook.isEventKey()) {
+            this.mc.thePlayer.closeScreen();
+        }
+        ci.cancel();
+    }
+
     public void focusRecipe(){
         page = 0;
         totalRecipes = 0;
         ArrayList<IRecipe> recipes;
         if(GuidebookPlusPlus.focus != null){
             if(GuidebookPlusPlus.isUsage){
-                recipes = GuidebookPlusPlus.findRecipesByInput(GuidebookPlusPlus.focus);//CraftingManager.getInstance().getRecipeList();
+                recipes = GuidebookPlusPlus.findRecipesByInput(GuidebookPlusPlus.focus);
             } else {
-                recipes = GuidebookPlusPlus.findRecipesByOutput(GuidebookPlusPlus.focus);//CraftingManager.getInstance().getRecipeList();
+                recipes = GuidebookPlusPlus.findRecipesByOutput(GuidebookPlusPlus.focus);
             }
         } else {
             recipes = (ArrayList<IRecipe>) CraftingManager.getInstance().getRecipeList();
         }
-
-
-        System.out.println(recipes.size());
 
         for (IRecipe recipe : recipes){
             if(recipe instanceof RecipeShapeless || recipe instanceof RecipeShaped){
