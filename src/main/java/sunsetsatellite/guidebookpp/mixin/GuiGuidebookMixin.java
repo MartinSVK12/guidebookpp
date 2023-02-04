@@ -91,10 +91,10 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
     }
 
     public void focusRecipe(){
-        page = 0;
         totalRecipes = 0;
         ArrayList<IRecipe> recipes;
         if(GuidebookPlusPlus.focus != null){
+            page = 0;
             if(GuidebookPlusPlus.isUsage){
                 recipes = GuidebookPlusPlus.findRecipesByInput(GuidebookPlusPlus.focus);
             } else {
