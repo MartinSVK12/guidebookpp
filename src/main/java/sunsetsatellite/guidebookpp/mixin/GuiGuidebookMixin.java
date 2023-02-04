@@ -65,6 +65,13 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
     public void keyTyped(char c, int i, CallbackInfo ci){
         if(c == 27){
             this.mc.thePlayer.closeScreen();
+            GuidebookPlusPlus.focus = null;
+            ci.cancel();
+        }
+        if(this.mc.gameSettings.keyInventory.isEventKey()){
+            this.mc.thePlayer.closeScreen();
+            this.mc.displayGuiScreen(this.mc.thePlayer.getGamemode().getInventoryGui(this.mc.thePlayer));
+            GuidebookPlusPlus.focus = null;
             ci.cancel();
         }
         Slot slot = GuidebookPlusPlus.lastSlotHovered;
@@ -78,6 +85,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
         } else if (slot == null && this.mc.gameSettings.keyGuidebook.isEventKey()) {
             this.mc.thePlayer.closeScreen();
+            GuidebookPlusPlus.focus = null;
         }
         ci.cancel();
     }
@@ -170,7 +178,6 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         if(maxPage < 0){
             maxPage = 0;
         }
-        GuidebookPlusPlus.focus = null;
     }
 
     public void drawGuiContainerBackgroundLayer(float f) {
