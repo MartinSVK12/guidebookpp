@@ -18,7 +18,9 @@ public class RecipeHandlerCrafting
     }
 
     public ArrayList<?> getRecipes() {
-        return (ArrayList<?>) CraftingManager.getInstance().getRecipeList();
+        ArrayList<?> list = (ArrayList<?>) CraftingManager.getInstance().getRecipeList();
+        list.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
+        return list;
     }
 
     public ArrayList<?> getRecipesFiltered(ItemStack filter, boolean usage) {
