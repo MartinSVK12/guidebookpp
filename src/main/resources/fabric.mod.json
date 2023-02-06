@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "guidebookpp",
-  "version": "1.1.2",
+  "version": "1.2",
 
   "name": "Guidebook++",
   "description": "Extends the guidebooks functionality!",
   "authors": [
     "MartinSVK12"
   ],
+  "icon": "icon.png",
   "contact": {
     "homepage": "",
     "sources": ""

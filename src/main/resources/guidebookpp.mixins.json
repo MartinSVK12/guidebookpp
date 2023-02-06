@@ -4,6 +4,9 @@
   "package": "sunsetsatellite.guidebookpp.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ContainerGuidebookRecipeBaseMixin",
+    "ContainerGuidebookRecipeCraftingMixin",
+    "ContainerGuidebookRecipeFurnaceMixin",
     "GameSettingsMixin",
     "GuiContainerMixin",
     "GuiGuidebookMixin",

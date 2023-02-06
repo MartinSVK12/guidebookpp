@@ -5,17 +5,21 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
+import sunsetsatellite.guidebookpp.IContainerRecipeBase;
 import sunsetsatellite.guidebookpp.IKeybinds;
+import sunsetsatellite.guidebookpp.IRecipeHandlerBase;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
+
+@Debug(
+        export = true
+)
 @Mixin(
         value = GuiGuidebook.class,
         remap = false
@@ -28,11 +32,15 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
 
     @Shadow private static int totalRecipes;
 
-    @Shadow private static Object[] storedRecipes;
+    private static ArrayList<Object> storedRecipes;
 
     @Shadow protected static int maxPage;
 
     @Shadow protected static int page;
+
+    @Shadow protected int xSize;
+
+    @Shadow protected int ySize;
 
     public GuiGuidebookMixin(Container container) {
         super(container);
@@ -52,7 +60,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(CallbackInfo ci) {
         if(totalRecipes == 0 && !GuidebookPlusPlus.isUsage){
             this.drawStringNoShadow(this.fontRenderer, "No recipes.", -58, -3, 4210752);
-        } else if(totalRecipes == 0 && GuidebookPlusPlus.isUsage){
+        } else if(totalRecipes == 0){
             this.drawStringNoShadow(this.fontRenderer, "No usages.", -58, -3, 4210752);
         }
     }
@@ -92,89 +100,29 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
 
     public void focusRecipe(){
         totalRecipes = 0;
-        ArrayList<IRecipe> recipes;
-        if(GuidebookPlusPlus.focus != null){
-            page = 0;
-            if(GuidebookPlusPlus.isUsage){
-                recipes = GuidebookPlusPlus.findRecipesByInput(GuidebookPlusPlus.focus);
-            } else {
-                recipes = GuidebookPlusPlus.findRecipesByOutput(GuidebookPlusPlus.focus);
-            }
+
+        if(GuidebookPlusPlus.focus != null) {
+            totalRecipes = GuidebookPlusPlus.getAllRecipesAmountFiltered(GuidebookPlusPlus.focus);
         } else {
-            recipes = (ArrayList<IRecipe>) CraftingManager.getInstance().getRecipeList();
+            totalRecipes = GuidebookPlusPlus.getAllRecipesAmount();
         }
-
-        for (IRecipe recipe : recipes){
-            if(recipe instanceof RecipeShapeless || recipe instanceof RecipeShaped){
-                totalRecipes++;
-            }
-        }
-
-        totalRecipes += RecipesFurnace.smelting().getSmeltingList().size();
-        totalRecipes += RecipesBlastFurnace.smelting().getSmeltingList().size();
 
         maxPage = totalRecipes / 6;
         if(Math.floorMod(totalRecipes,6) == 0){
             maxPage--;
         }
-        storedRecipes = new Object[totalRecipes];
+        storedRecipes = new ArrayList<>();
+        storedRecipes.ensureCapacity(totalRecipes);
 
-        int i = 0;
-        int j = 0;
-        for (IRecipe recipe : recipes){
-            if(recipe instanceof RecipeShapeless || recipe instanceof RecipeShaped){
-                storedRecipes[j] = recipe;
-                j++;
+        for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeHandlers.values()){
+            if(GuidebookPlusPlus.focus != null){
+                storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.focus, GuidebookPlusPlus.isUsage));
+            } else {
+                storedRecipes.addAll(handler.getRecipes());
             }
+
         }
 
-        ArrayList<Integer> keys = new ArrayList<Integer>(RecipesFurnace.smelting().getSmeltingList().keySet());
-        ArrayList<Integer> keysClone = (ArrayList<Integer>) keys.clone();
-        i = 0;
-        if(GuidebookPlusPlus.focus != null){
-            for(Integer key : keysClone){
-                if( !((ItemStack)RecipesFurnace.smelting().getSmeltingList().get(keysClone.get(i))).isItemEqual(GuidebookPlusPlus.focus) ){
-                    keys.remove(key);
-                    totalRecipes--;
-                    maxPage = totalRecipes / 6;
-                    if(Math.floorMod(totalRecipes,6) == 0){
-                        maxPage--;
-                    }
-                }
-                i++;
-            }
-        }
-
-
-
-        for(i = 0; i < keys.size(); i++) {
-            storedRecipes[j] = new ItemStack[]{new ItemStack(Block.furnaceStoneActive), new ItemStack((Integer)keys.get(i), 1, 0), (ItemStack)RecipesFurnace.smelting().getSmeltingList().get(keys.get(i))};
-            j++;
-        }
-
-
-        keys = new ArrayList(RecipesBlastFurnace.smelting().getSmeltingList().keySet());
-        keysClone = (ArrayList<Integer>) keys.clone();
-        i = 0;
-        if(GuidebookPlusPlus.focus != null) {
-            for (Integer key : keysClone) {
-                if (!((ItemStack) RecipesBlastFurnace.smelting().getSmeltingList().get(keysClone.get(i))).isItemEqual(GuidebookPlusPlus.focus)) {
-                    keys.remove(key);
-                    totalRecipes--;
-                    maxPage = totalRecipes / 6;
-                    if (Math.floorMod(totalRecipes, 6) == 0) {
-                        maxPage--;
-                    }
-                }
-                i++;
-            }
-        }
-
-
-        for(i = 0; i < keys.size(); i++) {
-            storedRecipes[j] = new ItemStack[]{new ItemStack(Block.furnaceBlastActive), new ItemStack((Integer)keys.get(i), 1, 0), (ItemStack)RecipesBlastFurnace.smelting().getSmeltingList().get(keys.get(i))};
-            j++;
-        }
         if(maxPage < 0){
             maxPage = 0;
         }
@@ -182,40 +130,34 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
 
     public void drawGuiContainerBackgroundLayer(float f) {
         this.scroll(Mouse.getDWheel());
-        int i = this.mc.renderEngine.getTexture("/gui/guidebook.png");
+        int i = GuidebookPlusPlus.mc.renderEngine.getTexture("/gui/guidebook.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(i);
-        int j = (this.width - this.xSize) / 2;
-        int k = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(j, k, 0, 0, this.xSize / 2, this.ySize);
-        this.drawTexturedModalRect(j + this.xSize / 2, k, 0, 0, this.xSize / 2, this.ySize);
-
-        for(int q = 0; q < 6; ++q) {
-            int xPos = j + 29 + 158 * (q / 3);
-            int yPos = k + 30 + 62 * (q % 3);
-            int yOffset = 0;
-            if (this.recipes[q] instanceof ContainerGuidebookRecipeCrafting) {
-                ContainerGuidebookRecipeCrafting r = (ContainerGuidebookRecipeCrafting)this.recipes[q];
-                if (r.inventorySlots.size() > 5) {
-                    yOffset = 54;
-                } else {
-                    yOffset = 0;
-                }
-            } else {
-                if (!(this.recipes[q] instanceof ContainerGuidebookRecipeFurnace)) {
-                    continue;
-                }
-
-                ContainerGuidebookRecipeFurnace r = (ContainerGuidebookRecipeFurnace)this.recipes[q];
-                if (r.furnaceType == 0) {
-                    yOffset = 108;
-                } else if (r.furnaceType == 1) {
-                    yOffset = 162;
-                }
+        GuidebookPlusPlus.mc.renderEngine.bindTexture(i);
+        int j = (this.width - xSize) / 2;
+        int k = (this.height - ySize) / 2;
+        this.drawTexturedModalRect(j, k, 0, 0, xSize / 2, ySize);
+        this.drawTexturedModalRect(j + xSize / 2, k, 0, 0, xSize / 2, ySize);
+        for(int r = 0; r < 6; r++){
+            if(this.recipes[r] != null){
+                ((IContainerRecipeBase)this.recipes[r]).drawContainer(((GuiGuidebook) (Object) this),xSize,ySize,r);
             }
-
-            this.drawTexturedModalRect(xPos, yPos, 158, yOffset, 98, 54);
         }
 
+    }
+
+
+    public void updateRecipesByPage(int page) {
+
+        int startIndex = page * 6;
+        this.recipes = new ContainerGuidebookRecipeBase[6];
+
+        for(int i = 0; i < 6 && startIndex + i < totalRecipes; ++i) {
+            //GuidebookPlusPlus.LOGGER.info(String.valueOf(storedRecipes.get(startIndex + i)));
+            //GuidebookPlusPlus.LOGGER.info("handler: "+ GuidebookPlusPlus.getHandler(storedRecipes.get(startIndex + i).getClass()));
+            this.recipes[i] = Objects.requireNonNull(GuidebookPlusPlus.getHandler(storedRecipes.get(startIndex + i).getClass()),"Invalid or unknown recipe handler!").getContainer(storedRecipes.get(startIndex + i));//GuidebookPlusPlus.recipeHandlers.get(storedRecipes.get(startIndex + i).getClass()).getContainer(storedRecipes.get(startIndex + i));
+        }
+
+
+        ((ContainerGuidebook)this.inventorySlots).setRecipes(this.mc.thePlayer, this.recipes, this.mc.statFileWriter);
     }
 }
