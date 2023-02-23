@@ -37,6 +37,7 @@ public class GuidebookPlusPlus implements ModInitializer {
         CraftingManager craftingManager = CraftingManager.getInstance();
         ArrayList<IRecipe> foundRecipes = new ArrayList<>();
         List<IRecipe> recipes = craftingManager.getRecipeList();
+        recipes.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
         for(IRecipe recipe : recipes){
             if(recipe.getRecipeOutput().isItemEqual(output)){
                 foundRecipes.add(recipe);
@@ -49,6 +50,7 @@ public class GuidebookPlusPlus implements ModInitializer {
         CraftingManager craftingManager = CraftingManager.getInstance();
         ArrayList<IRecipe> foundRecipes = new ArrayList<>();
         List<IRecipe> recipes = craftingManager.getRecipeList();
+        recipes.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
         for(IRecipe recipe : recipes){
             ArrayList<ItemStack> inputs = getRecipeItems(recipe);
             for(ItemStack recipeInput : inputs){

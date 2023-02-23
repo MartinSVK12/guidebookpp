@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "guidebookpp",
-  "version": "1.2",
+  "version": "1.2.1",
 
   "name": "Guidebook++",
   "description": "Extends the guidebooks functionality!",
@@ -10,8 +10,8 @@
   ],
   "icon": "icon.png",
   "contact": {
-    "homepage": "",
-    "sources": ""
+    "homepage": "https://github.com/MartinSVK12/guidebookpp",
+    "sources": "https://github.com/MartinSVK12/guidebookpp"
   },
 
   "license": "MIT",
