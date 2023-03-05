@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "guidebookpp",
-  "version": "1.2.1",
+  "version": "1.3",
 
   "name": "Guidebook++",
   "description": "Extends the guidebooks functionality!",
@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "sunsetsatellite.guidebookpp.GuidebookPlusPlus"
+    ],
+    "guidebookpp": [
+      "sunsetsatellite.guidebookpp.DefaultPlugin"
     ]
   },
   "mixins": [

@@ -114,7 +114,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         storedRecipes = new ArrayList<>();
         storedRecipes.ensureCapacity(totalRecipes);
 
-        for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeHandlers.values()){
+        for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
             if(GuidebookPlusPlus.focus != null){
                 storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.focus, GuidebookPlusPlus.isUsage));
             } else {

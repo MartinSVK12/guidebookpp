@@ -1,15 +1,11 @@
 package sunsetsatellite.guidebookpp;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sunsetsatellite.guidebookpp.handlers.RecipeHandlerBlastFurnace;
-import sunsetsatellite.guidebookpp.handlers.RecipeHandlerCrafting;
-import sunsetsatellite.guidebookpp.handlers.RecipeHandlerFurnace;
-import sunsetsatellite.guidebookpp.recipes.RecipeBlastFurnace;
-import sunsetsatellite.guidebookpp.recipes.RecipeFurnace;
 
 import java.util.*;
 
@@ -24,14 +20,7 @@ public class GuidebookPlusPlus implements ModInitializer {
 
     public static Minecraft mc = null;
 
-    public static HashMap<Object, IRecipeHandlerBase> recipeHandlers = new HashMap<>();
-    public static HashMap<IRecipeHandlerBase, Object> recipeHandlersInv = new HashMap<>();
-
-    public static void addHandler(IRecipeHandlerBase handler, Class<?> recipeClass){
-        LOGGER.info("Adding recipe handler: "+handler.getClass().getSimpleName());
-        recipeHandlers.put(recipeClass,handler);
-        recipeHandlersInv.put(handler,recipeClass);
-    }
+    public static CustomGuidebookRecipeRegistry recipeRegistry = new CustomGuidebookRecipeRegistry();
 
     public static ArrayList<IRecipe> findRecipesByOutput(ItemStack output){
         CraftingManager craftingManager = CraftingManager.getInstance();
@@ -82,7 +71,7 @@ public class GuidebookPlusPlus implements ModInitializer {
 
     public static int getAllRecipesAmount(){
         int amount = 0;
-        for (IRecipeHandlerBase handler : recipeHandlers.values()) {
+        for (IRecipeHandlerBase handler : recipeRegistry.recipeHandlers.values()) {
             amount += handler.getRecipeAmount();
         }
         return amount;
@@ -90,7 +79,7 @@ public class GuidebookPlusPlus implements ModInitializer {
 
     public static int getAllRecipesAmountFiltered(ItemStack filter){
         int amount = 0;
-        for (IRecipeHandlerBase handler : recipeHandlers.values()) {
+        for (IRecipeHandlerBase handler : recipeRegistry.recipeHandlers.values()) {
             amount += handler.getRecipesFiltered(filter,isUsage).size();
         }
         return amount;
@@ -98,9 +87,9 @@ public class GuidebookPlusPlus implements ModInitializer {
 
     public static IRecipeHandlerBase getHandler(Class<?> cls){
         //LOGGER.info("class: "+ cls);
-        for (IRecipeHandlerBase handler : recipeHandlers.values()) {
+        for (IRecipeHandlerBase handler : recipeRegistry.recipeHandlers.values()) {
            // LOGGER.info("recipe class bound to handler: "+ recipeHandlersInv.get(handler));
-            if(((Class<?>) recipeHandlersInv.get(handler)).isAssignableFrom(cls)){
+            if(((Class<?>) recipeRegistry.recipeHandlersInv.get(handler)).isAssignableFrom(cls)){
                 return handler;
             }
         }
@@ -109,11 +98,10 @@ public class GuidebookPlusPlus implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Adding default recipe handlers..");
-        addHandler(new RecipeHandlerCrafting(),IRecipe.class);
-        addHandler(new RecipeHandlerFurnace(), RecipeFurnace.class);
-        addHandler(new RecipeHandlerBlastFurnace(), RecipeBlastFurnace.class);
-        //LOGGER.info(String.valueOf(recipeHandlers));
+        LOGGER.info("Loading plugins..");
+        FabricLoader.getInstance().getEntrypointContainers("guidebookpp", GuidebookCustomRecipePlugin.class).forEach(plugin -> {
+            plugin.getEntrypoint().initializePlugin(recipeRegistry,LOGGER);
+        });
         LOGGER.info("Guidebook++ initialized.");
     }
 }
