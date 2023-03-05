@@ -1,7 +1,7 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.ContainerGuidebookRecipeBase;
-import net.minecraft.src.ItemStack;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
 
 import java.util.ArrayList;
 

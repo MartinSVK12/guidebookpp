@@ -1,6 +1,6 @@
 package sunsetsatellite.guidebookpp.recipes;
 
-import net.minecraft.src.ItemStack;
+import net.minecraft.core.item.ItemStack;
 
 public class RecipeBlastFurnace {
     public ItemStack input;

@@ -1,6 +1,12 @@
 package sunsetsatellite.guidebookpp.handlers;
 
-import net.minecraft.src.*;
+import net.minecraft.core.crafting.CraftingManager;
+import net.minecraft.core.crafting.recipe.IRecipe;
+import net.minecraft.core.crafting.recipe.RecipeShaped;
+import net.minecraft.core.crafting.recipe.RecipeShapeless;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeCrafting;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
 import sunsetsatellite.guidebookpp.IRecipeHandlerBase;
 

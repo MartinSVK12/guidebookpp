@@ -1,7 +1,7 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.GameSettings;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.core.option.GameSettings;
+import net.minecraft.core.option.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

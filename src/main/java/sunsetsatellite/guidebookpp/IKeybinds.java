@@ -1,6 +1,6 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.KeyBinding;
+import net.minecraft.core.option.KeyBinding;
 
 public interface IKeybinds {
     KeyBinding getKeyViewRecipe();

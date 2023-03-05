@@ -1,9 +1,8 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.ContainerGuidebookRecipeBase;
-import net.minecraft.src.ContainerGuidebookRecipeCrafting;
-import net.minecraft.src.ContainerGuidebookRecipeFurnace;
-import net.minecraft.src.GuiGuidebook;
+import net.minecraft.core.gui.GuiGuidebook;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeFurnace;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,5 +33,5 @@ public abstract class ContainerGuidebookRecipeFurnaceMixin extends ContainerGuid
             yOffset = 162;
         }
         guidebook.drawTexturedModalRect(xPos, yPos, 158, yOffset, 98, 54);
-    };
+    }
 }

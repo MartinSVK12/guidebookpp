@@ -1,7 +1,7 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.ContainerGuidebookRecipeBase;
-import net.minecraft.src.GuiGuidebook;
+import net.minecraft.core.gui.GuiGuidebook;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
 import org.spongepowered.asm.mixin.Mixin;
 import sunsetsatellite.guidebookpp.IContainerRecipeBase;
 

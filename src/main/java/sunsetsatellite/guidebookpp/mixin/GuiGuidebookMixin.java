@@ -1,6 +1,11 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.*;
+import net.minecraft.core.gui.GuiContainer;
+import net.minecraft.core.gui.GuiGuidebook;
+import net.minecraft.core.player.inventory.Container;
+import net.minecraft.core.player.inventory.ContainerGuidebook;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
+import net.minecraft.core.player.inventory.slot.Slot;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Debug;
@@ -70,7 +75,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void keyTyped(char c, int i, CallbackInfo ci){
+    public void keyTyped(char c, int i, int mouseX, int mouseY, CallbackInfo ci){
         if(c == 27){
             this.mc.thePlayer.closeScreen();
             GuidebookPlusPlus.focus = null;
@@ -114,7 +119,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         storedRecipes = new ArrayList<>();
         storedRecipes.ensureCapacity(totalRecipes);
 
-        for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
+        for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeHandlers.values()){
             if(GuidebookPlusPlus.focus != null){
                 storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.focus, GuidebookPlusPlus.isUsage));
             } else {

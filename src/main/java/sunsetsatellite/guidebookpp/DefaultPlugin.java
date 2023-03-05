@@ -1,6 +1,6 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.IRecipe;
+import net.minecraft.core.crafting.recipe.IRecipe;
 import sunsetsatellite.guidebookpp.handlers.RecipeHandlerBlastFurnace;
 import sunsetsatellite.guidebookpp.handlers.RecipeHandlerCrafting;
 import sunsetsatellite.guidebookpp.handlers.RecipeHandlerFurnace;

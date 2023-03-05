@@ -1,7 +1,8 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.*;
-import net.minecraft.src.command.ChatColor;
+import net.minecraft.core.gui.GuiContainer;
+import net.minecraft.core.gui.GuiScreen;
+import net.minecraft.core.player.inventory.slot.Slot;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -26,7 +27,7 @@ public abstract class GuiContainerMixin extends GuiScreen {
             method = "keyTyped",
             at = @At("TAIL")
     )
-    public void keyTyped(char c, int i, CallbackInfo ci){
+    public void keyTyped(char c, int i, int mouseX, int mouseY, CallbackInfo ci){
 
         Slot slot = GuidebookPlusPlus.lastSlotHovered;
         if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey()){
