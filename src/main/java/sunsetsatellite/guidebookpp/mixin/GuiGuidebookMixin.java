@@ -1,6 +1,7 @@
 package sunsetsatellite.guidebookpp.mixin;
 
 import net.minecraft.src.*;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Debug;
@@ -42,6 +43,8 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
 
     @Shadow protected int ySize;
 
+    public GuiTextField nameField;
+
     public GuiGuidebookMixin(Container container) {
         super(container);
     }
@@ -50,7 +53,15 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             at = @At("HEAD")
     )
     public void initGui(CallbackInfo ci){
+        nameField = new GuiTextField((GuiGuidebook)(Object)this, fontRenderer,Math.round(width / 2 - (xSize/2)),Math.round(height/2 - (ySize/2)) - 28,xSize,20,"");
         focusRecipe();
+    }
+
+    @Override
+    public void mouseClicked(int i1, int i2, int i3) {
+        //System.out.printf("%d %d %d\n",Math.round(width / 2 - i1),Math.round(height / 2 - i2),i3);
+        nameField.mouseClicked(i1, i2, i3);
+        super.mouseClicked(i1, i2, i3);
     }
 
     @Inject(
@@ -71,12 +82,23 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             cancellable = true
     )
     public void keyTyped(char c, int i, CallbackInfo ci){
-        if(c == 27){
+        if(nameField.isFocused) {
+            Keyboard.enableRepeatEvents(true);
+            if (c == Keyboard.KEY_ESCAPE) {
+                Keyboard.enableRepeatEvents(false);
+                nameField.setFocused(false);
+            } else nameField.textboxKeyTyped(c, i);
+            GuidebookPlusPlus.nameFocus = nameField.getText();
+            focusRecipe();
+            updatePages();
+            ci.cancel();
+        }
+        if(c == 27 && !nameField.isFocused){
             this.mc.thePlayer.closeScreen();
             GuidebookPlusPlus.focus = null;
             ci.cancel();
         }
-        if(this.mc.gameSettings.keyInventory.isEventKey()){
+        if(this.mc.gameSettings.keyInventory.isEventKey() && !nameField.isFocused){
             this.mc.thePlayer.closeScreen();
             this.mc.displayGuiScreen(this.mc.thePlayer.getGamemode().getInventoryGui(this.mc.thePlayer));
             GuidebookPlusPlus.focus = null;
@@ -98,11 +120,18 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         ci.cancel();
     }
 
+    @Shadow
+    protected abstract void updatePages();
+
     public void focusRecipe(){
         totalRecipes = 0;
 
         if(GuidebookPlusPlus.focus != null) {
             totalRecipes = GuidebookPlusPlus.getAllRecipesAmountFiltered(GuidebookPlusPlus.focus);
+        } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
+            for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
+                totalRecipes += handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus).size();
+            }
         } else {
             totalRecipes = GuidebookPlusPlus.getAllRecipesAmount();
         }
@@ -117,10 +146,11 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
             if(GuidebookPlusPlus.focus != null){
                 storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.focus, GuidebookPlusPlus.isUsage));
+            } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
+                storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus));
             } else {
                 storedRecipes.addAll(handler.getRecipes());
             }
-
         }
 
         if(maxPage < 0){
@@ -129,6 +159,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
     }
 
     public void drawGuiContainerBackgroundLayer(float f) {
+        nameField.drawTextBox();
         this.scroll(Mouse.getDWheel());
         int i = GuidebookPlusPlus.mc.renderEngine.getTexture("/gui/guidebook.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -8,6 +8,7 @@ import sunsetsatellite.guidebookpp.recipes.RecipeFurnace;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class RecipeHandlerFurnace
         implements IRecipeHandlerBase
@@ -47,5 +48,24 @@ public class RecipeHandlerFurnace
             }
         });
         return recipes;
+    }
+
+    @Override
+    public ArrayList<?> getRecipesFiltered(String name) {
+        if(name.equals("")){
+            return getRecipes();
+        }
+        HashMap<Integer,ItemStack> rawRecipes = new HashMap<>(RecipesFurnace.smelting().getSmeltingList());
+        ArrayList<RecipeFurnace> recipes = new ArrayList<>();
+        rawRecipes.forEach((I,O)->{
+            recipes.add(new RecipeFurnace(new ItemStack(I,1,0),O));
+        });
+        recipes.removeIf((R)->!getNameOfRecipeOutput(R).contains(name));
+        return recipes;
+    }
+
+    public String getNameOfRecipeOutput(Object recipe){
+        StringTranslate trans = StringTranslate.getInstance();
+        return trans.translateKey(((RecipeFurnace)recipe).output.getItemName()+".name");
     }
 }

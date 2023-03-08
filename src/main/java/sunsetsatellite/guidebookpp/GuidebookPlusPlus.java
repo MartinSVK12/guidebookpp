@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sunsetsatellite.guidebookpp.handlers.RecipeHandlerCrafting;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class GuidebookPlusPlus implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static ItemStack focus = null;
+    public static String nameFocus = "";
     public static boolean isUsage = false;
     public static Slot lastSlotHovered = null;
 
@@ -82,6 +84,19 @@ public class GuidebookPlusPlus implements ModInitializer {
         for (IRecipeHandlerBase handler : recipeRegistry.recipeHandlers.values()) {
             amount += handler.getRecipesFiltered(filter,isUsage).size();
         }
+        return amount;
+    }
+
+    public static int getAllRecipesAmountFiltered(String filter){
+        if(filter.equals("")){
+            return getAllRecipesAmount();
+        }
+        int amount = 0;
+        ArrayList<?> recipes = new ArrayList<>();
+        for (IRecipeHandlerBase handler : recipeRegistry.recipeHandlers.values()) {
+            recipes = handler.getRecipesFiltered(filter);
+        }
+        amount = recipes.size();
         return amount;
     }
 

@@ -46,4 +46,24 @@ public class RecipeHandlerBlastFurnace
         });
         return recipes;
     }
+
+    @Override
+    public ArrayList<?> getRecipesFiltered(String name) {
+        if(name.equals("")){
+            return getRecipes();
+        }
+        HashMap<Integer,ItemStack> rawRecipes = new HashMap<>(RecipesFurnace.smelting().getSmeltingList());
+        ArrayList<RecipeBlastFurnace> recipes = new ArrayList<>();
+        rawRecipes.forEach((I,O)->{
+            recipes.add(new RecipeBlastFurnace(new ItemStack(I,1,0),O));
+        });
+        recipes.removeIf((R)->!getNameOfRecipeOutput(R).contains(name));
+        return recipes;
+    }
+
+    @Override
+    public String getNameOfRecipeOutput(Object recipe){
+        StringTranslate trans = StringTranslate.getInstance();
+        return trans.translateKey(((RecipeBlastFurnace)recipe).output.getItemName()+".name");
+    }
 }
