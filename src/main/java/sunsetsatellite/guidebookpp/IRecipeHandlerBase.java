@@ -19,4 +19,6 @@ public interface IRecipeHandlerBase {
     ArrayList<?> getRecipesFiltered(String name);
 
     String getNameOfRecipeOutput(Object recipe);
+
+    String getHandlerName();
 }

@@ -68,4 +68,9 @@ public class RecipeHandlerFurnace
         StringTranslate trans = StringTranslate.getInstance();
         return trans.translateKey(((RecipeFurnace)recipe).output.getItemName()+".name").toLowerCase();
     }
+
+    @Override
+    public String getHandlerName() {
+        return "furnace";
+    }
 }

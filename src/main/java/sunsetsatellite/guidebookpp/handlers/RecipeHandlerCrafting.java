@@ -54,4 +54,9 @@ public class RecipeHandlerCrafting
         //GuidebookPlusPlus.LOGGER.info(recipe.toString()+" "+trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name"));
         return trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name").toLowerCase();
     }
+
+    @Override
+    public String getHandlerName() {
+        return "crafting";
+    }
 }

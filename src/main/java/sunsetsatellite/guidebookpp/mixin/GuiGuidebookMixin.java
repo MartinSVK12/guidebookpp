@@ -129,9 +129,19 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         if(GuidebookPlusPlus.focus != null) {
             totalRecipes = GuidebookPlusPlus.getAllRecipesAmountFiltered(GuidebookPlusPlus.focus);
         } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
-            for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
-                totalRecipes += handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus).size();
+            if(GuidebookPlusPlus.nameFocus.startsWith("*")){
+                for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
+                    if(handler.getHandlerName().equalsIgnoreCase(GuidebookPlusPlus.nameFocus.substring(1))){
+                        totalRecipes += handler.getRecipeAmount();
+                        break;
+                    }
+                }
+            } else {
+                for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
+                    totalRecipes += handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus).size();
+                }
             }
+
         } else {
             totalRecipes = GuidebookPlusPlus.getAllRecipesAmount();
         }
@@ -147,6 +157,12 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             if(GuidebookPlusPlus.focus != null){
                 storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.focus, GuidebookPlusPlus.isUsage));
             } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
+                if(GuidebookPlusPlus.nameFocus.startsWith("*")){
+                    if(handler.getHandlerName().equalsIgnoreCase(GuidebookPlusPlus.nameFocus.substring(1))){
+                        storedRecipes.addAll(handler.getRecipes());
+                        break;
+                    }
+                }
                 storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus));
             } else {
                 storedRecipes.addAll(handler.getRecipes());
