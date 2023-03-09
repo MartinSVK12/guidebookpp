@@ -60,12 +60,12 @@ public class RecipeHandlerFurnace
         rawRecipes.forEach((I,O)->{
             recipes.add(new RecipeFurnace(new ItemStack(I,1,0),O));
         });
-        recipes.removeIf((R)->!getNameOfRecipeOutput(R).contains(name));
+        recipes.removeIf((R)->!getNameOfRecipeOutput(R).contains(name.toLowerCase()));
         return recipes;
     }
 
     public String getNameOfRecipeOutput(Object recipe){
         StringTranslate trans = StringTranslate.getInstance();
-        return trans.translateKey(((RecipeFurnace)recipe).output.getItemName()+".name");
+        return trans.translateKey(((RecipeFurnace)recipe).output.getItemName()+".name").toLowerCase();
     }
 }

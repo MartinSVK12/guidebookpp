@@ -105,15 +105,15 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             ci.cancel();
         }
         Slot slot = GuidebookPlusPlus.lastSlotHovered;
-        if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey()){
+        if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey() && !nameField.isFocused){
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = false;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
-        } else if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewUsage().isEventKey()){
+        } else if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewUsage().isEventKey() && !nameField.isFocused){
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = true;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
-        } else if (slot == null && this.mc.gameSettings.keyGuidebook.isEventKey()) {
+        } else if (slot == null && this.mc.gameSettings.keyGuidebook.isEventKey() && !nameField.isFocused) {
             this.mc.thePlayer.closeScreen();
             GuidebookPlusPlus.focus = null;
         }

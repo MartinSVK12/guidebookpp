@@ -45,13 +45,13 @@ public class RecipeHandlerCrafting
         ArrayList<IRecipe> foundRecipes = new ArrayList<>();
         ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) ((ArrayList<IRecipe>) craftingManager.getRecipeList()).clone();
         recipes.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
-        recipes.removeIf((R)->!(getNameOfRecipeOutput(R).contains(name)));
+        recipes.removeIf((R)->!(getNameOfRecipeOutput(R).contains(name.toLowerCase())));
         return recipes;
     }
 
     public String getNameOfRecipeOutput(Object recipe){
         StringTranslate trans = StringTranslate.getInstance();
         //GuidebookPlusPlus.LOGGER.info(recipe.toString()+" "+trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name"));
-        return trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name");
+        return trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name").toLowerCase();
     }
 }
