@@ -22,7 +22,7 @@ public class RecipeHandlerBlastFurnace
     }
 
     public ArrayList<?> getRecipes() {
-        HashMap<Integer,ItemStack> rawRecipes = new HashMap<>(RecipesFurnace.smelting().getSmeltingList());
+        HashMap<Integer,ItemStack> rawRecipes = new HashMap<>(RecipesBlastFurnace.smelting().getSmeltingList());
         ArrayList<RecipeBlastFurnace> recipes = new ArrayList<>();
         rawRecipes.forEach((I,O)->{
             recipes.add(new RecipeBlastFurnace(new ItemStack(I,1,0),O));
@@ -52,7 +52,7 @@ public class RecipeHandlerBlastFurnace
         if(name.equals("")){
             return getRecipes();
         }
-        HashMap<Integer,ItemStack> rawRecipes = new HashMap<>(RecipesFurnace.smelting().getSmeltingList());
+        HashMap<Integer,ItemStack> rawRecipes = new HashMap<>(RecipesBlastFurnace.smelting().getSmeltingList());
         ArrayList<RecipeBlastFurnace> recipes = new ArrayList<>();
         rawRecipes.forEach((I,O)->{
             recipes.add(new RecipeBlastFurnace(new ItemStack(I,1,0),O));
