@@ -10,13 +10,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
-import sunsetsatellite.guidebookpp.IContainerRecipeBase;
-import sunsetsatellite.guidebookpp.IKeybinds;
-import sunsetsatellite.guidebookpp.IRecipeHandlerBase;
+import sunsetsatellite.guidebookpp.*;
+import sunsetsatellite.guidebookpp.recipes.RecipeBase;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Arrays;
 
 @Debug(
         export = true
@@ -33,7 +31,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
 
     @Shadow private static int totalRecipes;
 
-    private static ArrayList<Object> storedRecipes;
+    private static ArrayList<RecipeBase> storedRecipes;
 
     @Shadow protected static int maxPage;
 
@@ -59,7 +57,6 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
 
     @Override
     public void mouseClicked(int i1, int i2, int i3) {
-        //System.out.printf("%d %d %d\n",Math.round(width / 2 - i1),Math.round(height / 2 - i2),i3);
         nameField.mouseClicked(i1, i2, i3);
         super.mouseClicked(i1, i2, i3);
     }
@@ -127,23 +124,40 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         totalRecipes = 0;
 
         if(GuidebookPlusPlus.focus != null) {
-            totalRecipes = GuidebookPlusPlus.getAllRecipesAmountFiltered(GuidebookPlusPlus.focus);
+            if(GuidebookPlusPlus.isUsage){
+                totalRecipes = RecipeRegistry.findRecipesByInput(GuidebookPlusPlus.focus).size();
+            } else {
+                totalRecipes = RecipeRegistry.findRecipesByOutput(GuidebookPlusPlus.focus).size();
+            }
         } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
-            if(GuidebookPlusPlus.nameFocus.startsWith("*")){
-                for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
-                    if(handler.getHandlerName().equalsIgnoreCase(GuidebookPlusPlus.nameFocus.substring(1))){
-                        totalRecipes += handler.getRecipeAmount();
-                        break;
+            //mod search
+            if(GuidebookPlusPlus.nameFocus.startsWith("@")){
+                //combined mod and machine search
+                if(GuidebookPlusPlus.nameFocus.contains(">")){
+                    String[] str = GuidebookPlusPlus.nameFocus.split(">",-1);
+                    ArrayList<RecipeGroup> modIdGroups = RecipeRegistry.getGroupsByModId(str[0].replace("@",""));
+                    ArrayList<RecipeGroup> machineGroups = RecipeRegistry.getGroupsByMachineName(str[1]);
+                    modIdGroups.removeIf((G)-> !machineGroups.contains(G));
+                    for (RecipeGroup modIdGroup : modIdGroups) {
+                        totalRecipes += modIdGroup.recipes.size();
+                    }
+
+                } else {
+                    for (RecipeGroup group : RecipeRegistry.getGroupsByModId(GuidebookPlusPlus.nameFocus.replace("@", ""))) {
+                        totalRecipes += group.getRecipeAmount();
                     }
                 }
-            } else {
-                for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
-                    totalRecipes += handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus).size();
+            //machine search
+            } else if (GuidebookPlusPlus.nameFocus.startsWith(">")) {
+                for (RecipeGroup group : RecipeRegistry.getGroupsByMachineName(GuidebookPlusPlus.nameFocus.replace(">", ""))) {
+                    totalRecipes += group.getRecipeAmount();
                 }
+            } else {
+                totalRecipes = RecipeRegistry.findRecipesThatContain(GuidebookPlusPlus.nameFocus).size();
             }
 
         } else {
-            totalRecipes = GuidebookPlusPlus.getAllRecipesAmount();
+            totalRecipes = RecipeRegistry.getRecipeAmount();
         }
 
         maxPage = totalRecipes / 6;
@@ -153,20 +167,36 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         storedRecipes = new ArrayList<>();
         storedRecipes.ensureCapacity(totalRecipes);
 
-        for(IRecipeHandlerBase handler : GuidebookPlusPlus.recipeRegistry.recipeHandlers.values()){
-            if(GuidebookPlusPlus.focus != null){
-                storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.focus, GuidebookPlusPlus.isUsage));
-            } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
-                if(GuidebookPlusPlus.nameFocus.startsWith("*")){
-                    if(handler.getHandlerName().equalsIgnoreCase(GuidebookPlusPlus.nameFocus.substring(1))){
-                        storedRecipes.addAll(handler.getRecipes());
-                        break;
+        if(GuidebookPlusPlus.focus != null){
+            if(GuidebookPlusPlus.isUsage){
+                storedRecipes.addAll(RecipeRegistry.findRecipesByInput(GuidebookPlusPlus.focus));
+            } else {
+                storedRecipes.addAll(RecipeRegistry.findRecipesByOutput(GuidebookPlusPlus.focus));
+            }
+        } else if (!(GuidebookPlusPlus.nameFocus.equals(""))) {
+            if(GuidebookPlusPlus.nameFocus.startsWith("@")){
+                if(GuidebookPlusPlus.nameFocus.contains(">")){
+                    String[] str = GuidebookPlusPlus.nameFocus.split(">",-1);
+                    ArrayList<RecipeGroup> modIdGroups = RecipeRegistry.getGroupsByModId(str[0].replace("@",""));
+                    ArrayList<RecipeGroup> machineGroups = RecipeRegistry.getGroupsByMachineName(str[1]);
+                    modIdGroups.removeIf((G)-> !machineGroups.contains(G));
+                    for (RecipeGroup modIdGroup : modIdGroups) {
+                        storedRecipes.addAll(modIdGroup.recipes);
+                    }
+                } else {
+                    for (RecipeGroup group : RecipeRegistry.getGroupsByModId(GuidebookPlusPlus.nameFocus.replace("@", ""))) {
+                        storedRecipes.addAll(group.recipes);
                     }
                 }
-                storedRecipes.addAll(handler.getRecipesFiltered(GuidebookPlusPlus.nameFocus));
+            } else if (GuidebookPlusPlus.nameFocus.startsWith(">")) {
+                for (RecipeGroup group : RecipeRegistry.getGroupsByMachineName(GuidebookPlusPlus.nameFocus.replace(">", ""))) {
+                    storedRecipes.addAll(group.recipes);
+                }
             } else {
-                storedRecipes.addAll(handler.getRecipes());
+                storedRecipes.addAll(RecipeRegistry.findRecipesThatContain(GuidebookPlusPlus.nameFocus));
             }
+        } else {
+            storedRecipes.addAll(RecipeRegistry.getRecipes());
         }
 
         if(maxPage < 0){
@@ -186,12 +216,11 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         this.drawTexturedModalRect(j + xSize / 2, k, 0, 0, xSize / 2, ySize);
         for(int r = 0; r < 6; r++){
             if(this.recipes[r] != null){
-                ((IContainerRecipeBase)this.recipes[r]).drawContainer(((GuiGuidebook) (Object) this),xSize,ySize,r);
+                ((IContainerRecipeBase)this.recipes[r]).drawContainer(((GuiGuidebook) (Object) this),xSize,ySize,r, storedRecipes.get(page*6+r));
             }
         }
 
     }
-
 
     public void updateRecipesByPage(int page) {
 
@@ -199,9 +228,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         this.recipes = new ContainerGuidebookRecipeBase[6];
 
         for(int i = 0; i < 6 && startIndex + i < totalRecipes; ++i) {
-            //GuidebookPlusPlus.LOGGER.info(String.valueOf(storedRecipes.get(startIndex + i)));
-            //GuidebookPlusPlus.LOGGER.info("handler: "+ GuidebookPlusPlus.getHandler(storedRecipes.get(startIndex + i).getClass()));
-            this.recipes[i] = Objects.requireNonNull(GuidebookPlusPlus.getHandler(storedRecipes.get(startIndex + i).getClass()),"Invalid or unknown recipe handler!").getContainer(storedRecipes.get(startIndex + i));//GuidebookPlusPlus.recipeHandlers.get(storedRecipes.get(startIndex + i).getClass()).getContainer(storedRecipes.get(startIndex + i));
+            this.recipes[i] = storedRecipes.get(startIndex+i).group.handler.getContainer(storedRecipes.get(startIndex+i));
         }
 
 

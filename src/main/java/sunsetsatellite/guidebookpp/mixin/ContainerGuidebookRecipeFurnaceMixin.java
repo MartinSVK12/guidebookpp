@@ -4,11 +4,13 @@ import net.minecraft.src.ContainerGuidebookRecipeBase;
 import net.minecraft.src.ContainerGuidebookRecipeCrafting;
 import net.minecraft.src.ContainerGuidebookRecipeFurnace;
 import net.minecraft.src.GuiGuidebook;
+import net.minecraft.src.command.ChatColor;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
 import sunsetsatellite.guidebookpp.IContainerRecipeBase;
+import sunsetsatellite.guidebookpp.recipes.RecipeBase;
 
 @Mixin(
         value = ContainerGuidebookRecipeFurnace.class,
@@ -19,7 +21,7 @@ public abstract class ContainerGuidebookRecipeFurnaceMixin extends ContainerGuid
 
     @Shadow public int furnaceType;
 
-    public void drawContainer(GuiGuidebook guidebook, int xSize, int ySize, int index){
+    public void drawContainer(GuiGuidebook guidebook, int xSize, int ySize, int index, RecipeBase recipe){
         int i = GuidebookPlusPlus.mc.renderEngine.getTexture("/gui/guidebook.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GuidebookPlusPlus.mc.renderEngine.bindTexture(i);
@@ -35,4 +37,5 @@ public abstract class ContainerGuidebookRecipeFurnaceMixin extends ContainerGuid
         }
         guidebook.drawTexturedModalRect(xPos, yPos, 158, yOffset, 98, 54);
     };
+
 }

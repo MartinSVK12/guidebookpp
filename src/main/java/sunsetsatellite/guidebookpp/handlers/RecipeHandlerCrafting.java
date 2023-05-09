@@ -1,62 +1,36 @@
 package sunsetsatellite.guidebookpp.handlers;
 
+import b100.utils.ReflectUtils;
 import net.minecraft.src.*;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
 import sunsetsatellite.guidebookpp.IRecipeHandlerBase;
-import sunsetsatellite.guidebookpp.recipes.RecipeBlastFurnace;
+import sunsetsatellite.guidebookpp.RecipeGroup;
+import sunsetsatellite.guidebookpp.RecipeRegistry;
+import sunsetsatellite.guidebookpp.recipes.RecipeCrafting;
+import sunsetsatellite.guidebookpp.recipes.RecipeSimple;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class RecipeHandlerCrafting
         implements IRecipeHandlerBase
 {
     public ContainerGuidebookRecipeBase getContainer(Object o) {
-        return new ContainerGuidebookRecipeCrafting((IRecipe)o);
-    }
-
-    public int getRecipeAmount() {
-        return getRecipes().size();
-    }
-
-    public ArrayList<?> getRecipes() {
-        ArrayList<?> list = (ArrayList<?>) ((ArrayList<?>) CraftingManager.getInstance().getRecipeList()).clone();
-        list.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
-        return list;
-    }
-
-    public ArrayList<?> getRecipesFiltered(ItemStack filter, boolean usage) {
-        ArrayList<?> recipes;
-        if(usage){
-            recipes = GuidebookPlusPlus.findRecipesByInput(GuidebookPlusPlus.focus);
-        } else {
-            recipes = GuidebookPlusPlus.findRecipesByOutput(GuidebookPlusPlus.focus);
-        }
-        return recipes;
+        RecipeCrafting recipe = (RecipeCrafting) o;
+        return new ContainerGuidebookRecipeCrafting(recipe.recipe);
     }
 
     @Override
-    public ArrayList<?> getRecipesFiltered(String name) {
-        if(name.equals("")){
-            return getRecipes();
-        }
+    public void addRecipes() {
+        GuidebookPlusPlus.LOGGER.info("Adding recipes for: " + this.getClass().getSimpleName());
+        ArrayList<RecipeCrafting> recipes = new ArrayList<>();
         CraftingManager craftingManager = CraftingManager.getInstance();
-        ArrayList<IRecipe> foundRecipes = new ArrayList<>();
-        ArrayList<IRecipe> recipes = (ArrayList<IRecipe>) ((ArrayList<IRecipe>) craftingManager.getRecipeList()).clone();
-        recipes.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
-        recipes.removeIf((R)->!(getNameOfRecipeOutput(R).contains(name.toLowerCase())));
-        return recipes;
-    }
-
-    public String getNameOfRecipeOutput(Object recipe){
-        StringTranslate trans = StringTranslate.getInstance();
-        //GuidebookPlusPlus.LOGGER.info(recipe.toString()+" "+trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name"));
-        return trans.translateKey(((IRecipe)recipe).getRecipeOutput().getItemName()+".name").toLowerCase();
-    }
-
-    @Override
-    public String getHandlerName() {
-        return "crafting";
+        ArrayList<IRecipe> rawRecipes = (ArrayList<IRecipe>) ((ArrayList<IRecipe>) craftingManager.getRecipeList()).clone();
+        rawRecipes.removeIf((R)->!(R instanceof RecipeShaped) && !(R instanceof RecipeShapeless));
+        for (Object rawRecipe : rawRecipes) {
+            recipes.add(new RecipeCrafting((IRecipe) rawRecipe));
+        }
+        RecipeGroup group = new RecipeGroup("minecraft",Block.workbench,this,recipes);
+        RecipeRegistry.groups.add(group);
     }
 }

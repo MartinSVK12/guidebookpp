@@ -2,15 +2,15 @@ package sunsetsatellite.guidebookpp;
 
 import net.minecraft.src.ContainerGuidebookRecipeBase;
 import net.minecraft.src.ItemStack;
-import net.minecraft.src.StringTranslate;
-import sunsetsatellite.guidebookpp.recipes.RecipeFurnace;
 
 import java.util.ArrayList;
 
 public interface IRecipeHandlerBase {
     ContainerGuidebookRecipeBase getContainer(Object o);
 
-    int getRecipeAmount();
+    void addRecipes();
+
+    /*int getRecipeAmount();
 
     ArrayList<?> getRecipes();
 
@@ -20,5 +20,5 @@ public interface IRecipeHandlerBase {
 
     String getNameOfRecipeOutput(Object recipe);
 
-    String getHandlerName();
+    String getHandlerName();*/
 }

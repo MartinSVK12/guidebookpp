@@ -10,7 +10,6 @@
     "GameSettingsMixin",
     "GuiContainerMixin",
     "GuiGuidebookMixin",
-    "MinecraftMixin",
     "StringTranslateMixin"
   ],
   "client": [
