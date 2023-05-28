@@ -23,7 +23,7 @@ public class RecipeCrafting extends RecipeBase {
             return false;
         }
         //hack to get minecraft to match recipes for me
-        ArrayList<ItemStack> otherItems = GuidebookPlusPlus.getRecipeItems((IRecipe) obj);
+        ArrayList<ItemStack> otherItems = GuidebookPlusPlus.getRecipeItems(((RecipeCrafting) obj).recipe);
         InventoryAutocrafting inv = GuidebookPlusPlus.getCraftingInv(otherItems);
         return recipe.matches(inv);
     }
