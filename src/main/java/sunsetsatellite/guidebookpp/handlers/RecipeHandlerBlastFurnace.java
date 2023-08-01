@@ -1,6 +1,10 @@
 package sunsetsatellite.guidebookpp.handlers;
 
-import net.minecraft.src.*;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.crafting.recipe.RecipesBlastFurnace;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeFurnace;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
 import sunsetsatellite.guidebookpp.IRecipeHandlerBase;
 import sunsetsatellite.guidebookpp.RecipeGroup;

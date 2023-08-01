@@ -1,8 +1,7 @@
 package sunsetsatellite.guidebookpp.recipes;
 
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.lang.I18n;
 
 public class RecipeSimple extends RecipeBase {
     public ItemStack input;
@@ -47,19 +46,19 @@ public class RecipeSimple extends RecipeBase {
 
     @Override
     public boolean contains(String name) {
-        StringTranslate translator = StringTranslate.getInstance();
+        I18n translator = I18n.getInstance();
         return translator.translateKey(input.getItemName()+".name").toLowerCase().contains(name.toLowerCase()) || translator.translateKey(output.getItemName()+".name").toLowerCase().contains(name.toLowerCase());
     }
 
     @Override
     public boolean containsInput(String name) {
-        StringTranslate translator = StringTranslate.getInstance();
+        I18n translator = I18n.getInstance();
         return translator.translateKey(input.getItemName()+".name").toLowerCase().contains(name.toLowerCase());
     }
 
     @Override
     public boolean containsOutput(String name) {
-        StringTranslate translator = StringTranslate.getInstance();
+        I18n translator = I18n.getInstance();
         return translator.translateKey(output.getItemName()+".name").toLowerCase().contains(name.toLowerCase());
     }
 }

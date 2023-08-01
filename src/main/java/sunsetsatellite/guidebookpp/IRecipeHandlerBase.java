@@ -1,9 +1,7 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.ContainerGuidebookRecipeBase;
-import net.minecraft.src.ItemStack;
 
-import java.util.ArrayList;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
 
 public interface IRecipeHandlerBase {
     ContainerGuidebookRecipeBase getContainer(Object o);

@@ -12,5 +12,6 @@ public class DefaultPlugin implements GuidebookCustomRecipePlugin {
         new RecipeHandlerFurnace().addRecipes();
         new RecipeHandlerBlastFurnace().addRecipes();
         new RecipeHandlerCrafting().addRecipes();
+
     }
 }

@@ -1,9 +1,7 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.ContainerGuidebookRecipeBase;
+import net.minecraft.core.block.Block;
 import org.jetbrains.annotations.NotNull;
-import sunsetsatellite.guidebookpp.IRecipeHandlerBase;
 import sunsetsatellite.guidebookpp.recipes.RecipeBase;
 
 import java.util.ArrayList;

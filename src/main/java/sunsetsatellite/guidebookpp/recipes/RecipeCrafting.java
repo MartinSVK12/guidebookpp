@@ -1,8 +1,8 @@
 package sunsetsatellite.guidebookpp.recipes;
 
-import net.minecraft.src.IRecipe;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.core.crafting.recipe.IRecipe;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.lang.I18n;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;
 import sunsetsatellite.guidebookpp.InventoryAutocrafting;
 
@@ -66,7 +66,7 @@ public class RecipeCrafting extends RecipeBase {
 
     @Override
     public boolean contains(String name) {
-        StringTranslate translator = StringTranslate.getInstance();
+        I18n translator = I18n.getInstance();
         ArrayList<ItemStack> recipeItems = GuidebookPlusPlus.getRecipeItems(recipe);
         for (ItemStack recipeItem : recipeItems) {
             if(translator.translateKey(recipeItem.getItemName()+".name").toLowerCase().contains(name.toLowerCase())){
@@ -78,7 +78,7 @@ public class RecipeCrafting extends RecipeBase {
 
     @Override
     public boolean containsInput(String name) {
-        StringTranslate translator = StringTranslate.getInstance();
+        I18n translator = I18n.getInstance();
         ArrayList<ItemStack> recipeItems = GuidebookPlusPlus.getRecipeItems(recipe);
         for (ItemStack recipeItem : recipeItems) {
             if(translator.translateKey(recipeItem.getItemName()+".name").toLowerCase().contains(name.toLowerCase())){
@@ -90,7 +90,7 @@ public class RecipeCrafting extends RecipeBase {
 
     @Override
     public boolean containsOutput(String name) {
-        StringTranslate translator = StringTranslate.getInstance();
+        I18n translator = I18n.getInstance();
         return translator.translateKey(recipe.getRecipeOutput().getItemName()+".name").toLowerCase().contains(name.toLowerCase());
     }
 }

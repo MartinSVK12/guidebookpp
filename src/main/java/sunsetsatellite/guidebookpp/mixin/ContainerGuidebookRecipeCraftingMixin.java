@@ -1,10 +1,8 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.ContainerGuidebookRecipeBase;
-import net.minecraft.src.ContainerGuidebookRecipeCrafting;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiGuidebook;
-import net.minecraft.src.command.ChatColor;
+import net.minecraft.client.gui.GuiGuidebook;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeCrafting;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import sunsetsatellite.guidebookpp.GuidebookPlusPlus;

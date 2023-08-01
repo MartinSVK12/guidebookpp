@@ -1,7 +1,7 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.Block;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.lang.I18n;
 import sunsetsatellite.guidebookpp.recipes.RecipeBase;
 
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ public class RecipeRegistry {
     public static ArrayList<RecipeGroup> getGroupsByMachineName(String machineName){
         ArrayList<RecipeGroup> machineGroups = new ArrayList<>();
         for (RecipeGroup group : groups) {
-            StringTranslate translator = StringTranslate.getInstance();
-            if(translator.translateKey(group.machine.getBlockName(0)+".name").equalsIgnoreCase(machineName)){
+            I18n translator = I18n.getInstance();
+            if(translator.translateKey(group.machine.getKey()+".name").equalsIgnoreCase(machineName)){
                 machineGroups.add(group);
             }
         }

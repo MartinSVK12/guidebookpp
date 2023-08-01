@@ -1,10 +1,8 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.GameSettings;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.client.option.GameSettings;
+import net.minecraft.client.option.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import sunsetsatellite.guidebookpp.IKeybinds;
 
 @Mixin(

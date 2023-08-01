@@ -1,7 +1,6 @@
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.GuiGuidebook;
-import sunsetsatellite.guidebookpp.mixin.GuiGuidebookMixin;
+import net.minecraft.client.gui.GuiGuidebook;
 import sunsetsatellite.guidebookpp.recipes.RecipeBase;
 
 public interface IContainerRecipeBase {

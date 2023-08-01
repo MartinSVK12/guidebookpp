@@ -1,15 +1,14 @@
 package sunsetsatellite.guidebookpp;
 
-import b100.utils.ReflectUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.crafting.recipe.*;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sunsetsatellite.guidebookpp.handlers.RecipeHandlerCrafting;
-
-import java.sql.Ref;
 import java.util.*;
 
 
@@ -22,7 +21,7 @@ public class GuidebookPlusPlus implements ModInitializer {
     public static boolean isUsage = false;
     public static Slot lastSlotHovered = null;
 
-    public static Minecraft mc = Minecraft.getMinecraft();
+    public static Minecraft mc = Minecraft.getMinecraft(Minecraft.class);
 
     public static ArrayList<ItemStack> getRecipeItems(IRecipe recipe){
         ArrayList<ItemStack> inputs = new ArrayList<>();
@@ -61,5 +60,8 @@ public class GuidebookPlusPlus implements ModInitializer {
         });
         LOGGER.info(String.format("Registered %d recipes in %d groups",RecipeRegistry.getRecipeAmount(),RecipeRegistry.getGroupAmount()));
         LOGGER.info("Guidebook++ initialized.");
+    }
+
+    public GuidebookPlusPlus(){
     }
 }

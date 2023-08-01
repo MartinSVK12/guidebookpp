@@ -1,6 +1,14 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.src.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiContainer;
+import net.minecraft.client.gui.GuiGuidebook;
+import net.minecraft.client.gui.GuiInventory;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.core.player.inventory.Container;
+import net.minecraft.core.player.inventory.ContainerGuidebook;
+import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
+import net.minecraft.core.player.inventory.slot.Slot;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -51,7 +59,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             at = @At("HEAD")
     )
     public void initGui(CallbackInfo ci){
-        nameField = new GuiTextField((GuiGuidebook)(Object)this, fontRenderer,Math.round(width / 2 - (xSize/2)),Math.round(height/2 - (ySize/2)) - 28,xSize,20,"");
+        nameField = new GuiTextField((GuiGuidebook)(Object)this, fontRenderer,Math.round(width / 2 - (xSize/2)),Math.round(height/2 - (ySize/2)) - 28,xSize,20,"","");
         focusRecipe();
     }
 
@@ -78,7 +86,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void keyTyped(char c, int i, CallbackInfo ci){
+    public void keyTyped(char c, int i, int mouseX, int mouseY, CallbackInfo ci){
         if(nameField.isFocused) {
             Keyboard.enableRepeatEvents(true);
             if (c == Keyboard.KEY_ESCAPE) {
@@ -97,7 +105,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         }
         if(this.mc.gameSettings.keyInventory.isEventKey() && !nameField.isFocused){
             this.mc.thePlayer.closeScreen();
-            this.mc.displayGuiScreen(this.mc.thePlayer.getGamemode().getInventoryGui(this.mc.thePlayer));
+            this.mc.displayGuiScreen(((MinecraftAccessor)this.mc).callGetGuiInventory());
             GuidebookPlusPlus.focus = null;
             ci.cancel();
         }

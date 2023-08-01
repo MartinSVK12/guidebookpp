@@ -5,10 +5,11 @@
 
 package sunsetsatellite.guidebookpp;
 
-import net.minecraft.src.Container;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.InventoryCrafting;
-import net.minecraft.src.ItemStack;
+
+import net.minecraft.core.entity.player.EntityPlayer;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.Container;
+import net.minecraft.core.player.inventory.InventoryCrafting;
 
 public class InventoryAutocrafting extends InventoryCrafting {
     private ItemStack[] stackList;
