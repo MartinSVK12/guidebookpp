@@ -3,7 +3,6 @@ package sunsetsatellite.guidebookpp;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.crafting.recipe.*;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.slot.Slot;

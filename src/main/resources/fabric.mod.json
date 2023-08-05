@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "guidebookpp",
+  "version": "1.5.3",
+
+  "name": "Guidebook++",
+  "description": "Extends the guidebooks functionality!",
+  "authors": [
+    "MartinSVK12"
+  ],
+  "icon": "icon.png",
+  "contact": {
+    "homepage": "https://github.com/MartinSVK12/guidebookpp",
+    "sources": "https://github.com/MartinSVK12/guidebookpp"
+  },
+
+  "license": "MIT",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sunsetsatellite.guidebookpp.GuidebookPlusPlus"
+    ],
+    "guidebookpp": [
+      "sunsetsatellite.guidebookpp.DefaultPlugin"
+    ]
+  },
+  "mixins": [
+    "guidebookpp.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "minecraft": "1.7.7.0"
+  },
+  "suggests": {
+  }
+}
