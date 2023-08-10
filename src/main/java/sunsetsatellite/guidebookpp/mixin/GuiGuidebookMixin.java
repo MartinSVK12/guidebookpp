@@ -1,10 +1,6 @@
 package sunsetsatellite.guidebookpp.mixin;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiContainer;
-import net.minecraft.client.gui.GuiGuidebook;
-import net.minecraft.client.gui.GuiInventory;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.*;
 import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.player.inventory.ContainerGuidebook;
 import net.minecraft.core.player.inventory.ContainerGuidebookRecipeBase;
@@ -22,7 +18,6 @@ import sunsetsatellite.guidebookpp.*;
 import sunsetsatellite.guidebookpp.recipes.RecipeBase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @Debug(
         export = true
@@ -89,9 +84,12 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
     public void keyTyped(char c, int i, int mouseX, int mouseY, CallbackInfo ci){
         if(nameField.isFocused) {
             Keyboard.enableRepeatEvents(true);
-            if (c == Keyboard.KEY_ESCAPE) {
+            if (c == 27) {
                 Keyboard.enableRepeatEvents(false);
                 nameField.setFocused(false);
+                this.mc.thePlayer.closeScreen();
+                GuidebookPlusPlus.focus = null;
+                ci.cancel();
             } else nameField.textboxKeyTyped(c, i);
             GuidebookPlusPlus.nameFocus = nameField.getText();
             focusRecipe();
@@ -111,10 +109,17 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
         }
         Slot slot = GuidebookPlusPlus.lastSlotHovered;
         if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey() && !nameField.isFocused){
+            if(!slot.discovered && GuidebookPlusPlus.config.getBoolean("disableLookupOfUndiscoveredItems")){
+                ci.cancel();
+                return;
+            }
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = false;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
         } else if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewUsage().isEventKey() && !nameField.isFocused){
+            if(!slot.discovered && GuidebookPlusPlus.config.getBoolean("disableLookupOfUndiscoveredItems")){
+                return;
+            }
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = true;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
@@ -129,6 +134,7 @@ public abstract class GuiGuidebookMixin extends GuiContainer {
     protected abstract void updatePages();
 
     public void focusRecipe(){
+        page = 0;
         totalRecipes = 0;
 
         if(GuidebookPlusPlus.focus != null) {

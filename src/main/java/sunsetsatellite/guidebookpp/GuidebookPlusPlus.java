@@ -8,12 +8,19 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.slot.Slot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import turniplabs.halplibe.util.ConfigHandler;
 import java.util.*;
 
 
 public class GuidebookPlusPlus implements ModInitializer {
     public static final String MOD_ID = "guidebookpp";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final ConfigHandler config;
+    static {
+        Properties props = new Properties();
+        props.setProperty("disableLookupOfUndiscoveredItems","true");
+        config = new ConfigHandler(MOD_ID,props);
+    }
 
     public static ItemStack focus = null;
     public static String nameFocus = "";
