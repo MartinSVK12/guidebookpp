@@ -60,11 +60,6 @@ public class GuidebookPlusPlus implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Loading plugins..");
-        FabricLoader.getInstance().getEntrypointContainers("guidebookpp", GuidebookCustomRecipePlugin.class).forEach(plugin -> {
-            plugin.getEntrypoint().initializePlugin(LOGGER);
-        });
-        LOGGER.info(String.format("Registered %d recipes in %d groups",RecipeRegistry.getRecipeAmount(),RecipeRegistry.getGroupAmount()));
         LOGGER.info("Guidebook++ initialized.");
     }
 
