@@ -34,14 +34,14 @@ public abstract class GuiContainerMixin extends GuiScreen {
 
         Slot slot = GuidebookPlusPlus.lastSlotHovered;
         if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewRecipe().isEventKey()){
-            this.mc.thePlayer.closeScreen();
             onGuiClosed();
+            this.mc.thePlayer.closeScreen();
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = false;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
         } else if(slot != null && ((IKeybinds)this.mc.gameSettings).getKeyViewUsage().isEventKey()){
-            this.mc.thePlayer.closeScreen();
             onGuiClosed();
+            this.mc.thePlayer.closeScreen();
             GuidebookPlusPlus.focus = slot.getStack();
             GuidebookPlusPlus.isUsage = true;
             GuidebookPlusPlus.mc.thePlayer.displayGUIGuidebook();
