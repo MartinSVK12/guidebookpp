@@ -10,6 +10,7 @@
     "GameSettingsMixin",
     "GuiContainerMixin",
     "GuiGuidebookMixin",
+    "GuiOptionsPageControlsMixin",
     "MinecraftAccessor",
     "MinecraftMixin"
   ],
